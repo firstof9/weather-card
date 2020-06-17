@@ -4,6 +4,7 @@ const css = LitElement.prototype.css;
 
 const weatherIconsDay = {
   clear: "day",
+  clr: "day",
   "clear-night": "night",
   cloudy: "cloudy",
   fog: "cloudy",
@@ -153,7 +154,24 @@ class WeatherCard extends LitElement {
         ${this._config.forecast !== false
           ? this.renderForecast(stateObj.attributes.forecast)
           : ""}
+        ${this._config.forecast !== false
+          ? this.renderDayForecast(stateObj.attributes.forecast)
+          : ""}
       </ha-card>
+    `;
+  }
+
+  renderDayForecast(forecast) {
+    if (!forecast || forecast.length === 0) {
+      return html``;
+    }
+
+    return html`
+      <div class="day_summary">
+        <span class="unit">
+          ${forecast.slice(0, 1)[0].detailed_description}
+        </span>
+      </div>
     `;
   }
 
@@ -277,23 +295,36 @@ class WeatherCard extends LitElement {
                   style="background: none, url('${this.getWeatherIcon(
                     daily.condition.toLowerCase()
                   )}') no-repeat; background-size: contain"
-                ></i>
-                <div class="highTemp">
-                  ${daily.temperature}${this.getUnit("temperature")}
-                </div>
+                ></i
+                ><br />
                 ${daily.templow !== undefined
                   ? html`
-                      <div class="lowTemp">
-                        ${daily.templow}${this.getUnit("temperature")}
-                      </div>
+                      <span class="lowTemp">
+                        ${daily.templow}
+                      </span>
+                      /
                     `
                   : ""}
+                <span class="highTemp">
+                  ${daily.temperature}${this.getUnit("temperature")}
+                </span>
                 ${!this._config.hide_precipitation &&
                 daily.precipitation !== undefined &&
                 daily.precipitation !== null
                   ? html`
                       <div class="precipitation">
                         ${daily.precipitation} ${this.getUnit("precipitation")}
+                      </div>
+                    `
+                  : ""}
+                ${!this._config.hide_precipitation &&
+                daily.precipitation_probability !== undefined &&
+                daily.precipitation_probability !== null
+                  ? html`
+                      <div class="precipitation_probability">
+                        ${daily.precipitation_probability}${this.getUnit(
+                          "precipitation_probability"
+                        )}
                       </div>
                     `
                   : ""}
@@ -325,6 +356,8 @@ class WeatherCard extends LitElement {
         return lengthUnit;
       case "precipitation":
         return lengthUnit === "km" ? "mm" : "in";
+      case "precipitation_probability":
+        return "%";
       default:
         return this.hass.config.unit_system[measure] || "";
     }
