@@ -19,7 +19,7 @@ const weatherIconsDay = {
   sunny: "day",
   windy: "cloudy",
   "windy-variant": "cloudy-day-3",
-  exceptional: "!!",
+  exceptional: "exceptional",
 };
 
 const weatherIconsNight = {
