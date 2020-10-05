@@ -18,9 +18,13 @@ if (
   customElements.define("ha-switch", customElements.get("paper-toggle-button"));
 }
 
-const LitElement = Object.getPrototypeOf(customElements.get("hui-view"));
+const LitElement = customElements.get("hui-masonry-view")
+  ? Object.getPrototypeOf(customElements.get("hui-masonry-view"))
+  : Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
+
+const HELPERS = window.loadCardHelpers();
 
 export class WeatherCardEditor extends LitElement {
   setConfig(config) {
@@ -61,6 +65,14 @@ export class WeatherCardEditor extends LitElement {
 
   get _number_of_forecasts() {
     return this._config.number_of_forecasts || 5;
+  }
+
+  firstUpdated() {
+    HELPERS.then((help) => {
+      if (help.importMoreInfoControl) {
+        help.importMoreInfoControl("fan");
+      }
+    });
   }
 
   render() {

@@ -1,4 +1,6 @@
-const LitElement = Object.getPrototypeOf(customElements.get("hui-view"));
+const LitElement = customElements.get("hui-masonry-view")
+  ? Object.getPrototypeOf(customElements.get("hui-masonry-view"))
+  : Object.getPrototypeOf(customElements.get("hui-view"));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
@@ -230,15 +232,11 @@ class WeatherCard extends LitElement {
         <li>
           <ha-icon icon="mdi:gauge"></ha-icon>
           ${stateObj.attributes.pressure}
-          <span class="unit">
-            ${this.getUnit("air_pressure")}
-          </span>
+          <span class="unit"> ${this.getUnit("air_pressure")} </span>
         </li>
         <li>
           <ha-icon icon="mdi:weather-fog"></ha-icon> ${stateObj.attributes
-            .visibility}<span class="unit">
-            ${this.getUnit("length")}
-          </span>
+            .visibility}<span class="unit"> ${this.getUnit("length")} </span>
         </li>
         ${next_rising
           ? html`
@@ -299,9 +297,7 @@ class WeatherCard extends LitElement {
                 ><br />
                 ${daily.templow !== undefined
                   ? html`
-                      <span class="lowTemp">
-                        ${daily.templow}
-                      </span>
+                      <span class="lowTemp"> ${daily.templow} </span>
                       /
                     `
                   : ""}
